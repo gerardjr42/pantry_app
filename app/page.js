@@ -2,6 +2,7 @@
 import { firestore } from "@/firebase";
 import { collection, deleteDoc, doc, getDoc, getDocs, query, setDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import AddItem from "./Components/AddItem";
 
 export default function Home() {
   // Create states to hold firebase data
@@ -67,42 +68,15 @@ export default function Home() {
   return (
     <>
     <div className="flex flex-col items-center justify-center w-screen h-screen gap-4">
-      {open && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-            <button className="absolute top-4 right-4 text-gray-500 hover:text-gray-700" onClick={handleClose}>
-              &times;
-            </button>
-            <h2 className="text-2xl font-bold mb-4">Add Item</h2>
-            <div className="flex space-x-2">
-              <label htmlFor="itemName"></label>
-              <input
-                className="border border-gray-300 rounded-md px-3 py-2 flex-1"
-                type="text"
-                value={itemName}
-                onChange={(e) => setItemName(e.target.value)}
-              />
-              <button 
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
-                onClick={(e) => {
-                  addItem(itemName);
-                  setItemName("");
-                  handleClose();
-                }}
-              >
-              Add
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-      {/* handleOpen */}
       <button 
         className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
         onClick={handleOpen}
       >
         Add New Item
       </button>
+      {open && (
+        <AddItem handleClose={handleClose} itemName={itemName} setItemName={setItemName} addItem={addItem}/>
+      )}
       {/* Show data */}
       <div className="border border-gray-400 rounded-md w-[800px] h-[500px] overflow-auto">
         <div className="bg-blue-200 p-4">
