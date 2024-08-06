@@ -3,7 +3,11 @@ dotenv.config();
 
 import { OpenAI } from "openai";
 
+// Need below as well but first need to go setup firebase storage, for now comment this out
+// import {getStorage} from "firebase/storage";
+
 const openai = new OpenAI();
+
 
 const response = await openai.chat.completions.create({
   model: "gpt-4o",
@@ -18,7 +22,7 @@ const response = await openai.chat.completions.create({
         {
           type: "image_url",
           image_url: {
-            url: "https://images.unsplash.com/photo-1490682143684-14369e18dce8?ixid=M3wxMTI1OHwwfDF8cmFuZG9tfHx8fHx8fHx8MTcyMjg0MDI1OXw&ixlib=rb-4.0.3&q=85&w=3360",
+            url: `https://images.unsplash.com/photo-1490682143684-14369e18dce8?ixid=M3wxMTI1OHwwfDF8cmFuZG9tfHx8fHx8fHx8MTcyMjg0MDI1OXw&ixlib=rb-4.0.3&q=85&w=3360`,
             detail: "auto"
           }
         }
