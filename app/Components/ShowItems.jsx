@@ -29,7 +29,7 @@ export default function ShowItems({
     });
 
   return (
-    <div className="w-full max-w-5xl mx-auto shadow-xl rounded-lg bg-white flex flex-col">
+    <div className="w-full max-w-5xl mx-auto shadow-xl rounded-lg bg-white flex flex-col h-[calc(80vh-100px)] overflow-y-hidden">
       <div className="bg-gradient-to-r from-teal-500 to-purple-500 p-4 flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0 sm:space-x-4">
         <input
           type="text"
@@ -49,9 +49,9 @@ export default function ShowItems({
           <option value="quantity-desc">Quantity (Descending)</option>
         </select>
       </div>
-      <div className="max-h-[calc(80vh-200px)] overflow-y-auto">
+      <div className="flex-grow overflow-y-scroll">
         <table className="w-full text-left">
-          <thead className="sticky top-0 bg-gradient-to-r from-teal-500 to-purple-500 text-white">
+          <thead className="bg-gradient-to-r from-teal-500 to-purple-500 text-white sticky top-0">
             <tr>
               <th className="px-6 py-3 w-1/2">Item</th>
               <th className="px-6 py-3 w-1/4">Quantity</th>
