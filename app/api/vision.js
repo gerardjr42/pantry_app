@@ -1,34 +1,37 @@
-import * as dotenv from "dotenv";
-dotenv.config();
-
 import { OpenAI } from "openai";
 
-// Need below as well but first need to go setup firebase storage, for now comment this out
-// import {getStorage} from "firebase/storage";
+const openai = new OpenAI({
+  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+  dangerouslyAllowBrowser: true,
+});
 
-const openai = new OpenAI();
-
-
-const response = await openai.chat.completions.create({
-  model: "gpt-4o",
-  messages: [
-    {
-      role: "user",
-      content: [
+export const analyzeImage = async (imageBase64) => {
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
         {
-          type: "text",
-          text: "Describe this image"
+          role: "user",
+          content: [
+            {
+              type: "text",
+              text: "What item is in this image? Please respond with just the name of the item.",
+            },
+            {
+              type: "image_url",
+              image_url: {
+                url: `data:image/jpeg;base64,${imageBase64}`,
+              },
+            },
+          ],
         },
-        {
-          type: "image_url",
-          image_url: {
-            url: `https://images.unsplash.com/photo-1490682143684-14369e18dce8?ixid=M3wxMTI1OHwwfDF8cmFuZG9tfHx8fHx8fHx8MTcyMjg0MDI1OXw&ixlib=rb-4.0.3&q=85&w=3360`,
-            detail: "auto"
-          }
-        }
-      ]
-    }
-  ]
-})
+      ],
+      max_tokens: 300,
+    });
 
-console.log(response.choices[0]);
+    return response.choices[0].message.content.trim();
+  } catch (error) {
+    console.error("Error analyzing image:", error);
+    return null;
+  }
+};
