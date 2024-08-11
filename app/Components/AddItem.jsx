@@ -1,33 +1,50 @@
+import CloseIcon from "@mui/icons-material/Close";
+import { Button, IconButton, TextField } from "@mui/material";
 
-export default function AddItem({handleClose, itemName, setItemName, addItem}) {
-  
+export default function AddItem({
+  handleClose,
+  itemName,
+  setItemName,
+  addItem,
+}) {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-            <button className="absolute top-4 right-4 text-gray-500 hover:text-gray-700" onClick={handleClose}>
-              &times;
-            </button>
-            <h2 className="text-2xl font-bold mb-4">Add Item</h2>
-            <div className="flex space-x-2">
-              <label htmlFor="itemName"></label>
-              <input
-                className="border border-gray-300 rounded-md px-3 py-2 flex-1"
-                type="text"
-                value={itemName}
-                onChange={(e) => setItemName(e.target.value)}
-              />
-              <button 
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
-                onClick={(e) => {
-                  addItem(itemName);
-                  setItemName("");
-                  handleClose();
-                }}
-              >
-              Add
-              </button>
-            </div>
-          </div>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
+        <IconButton
+          aria-label="close"
+          onClick={handleClose}
+          sx={{
+            position: "absolute",
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+        <h2 className="text-2xl font-bold mb-4">Add Item</h2>
+        <div className="flex flex-col space-y-4">
+          <TextField
+            fullWidth
+            variant="outlined"
+            value={itemName}
+            onChange={(e) => setItemName(e.target.value)}
+            placeholder="Enter item name"
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            onClick={() => {
+              addItem(itemName);
+              setItemName("");
+              handleClose();
+            }}
+          >
+            Add
+          </Button>
         </div>
-  )
+      </div>
+    </div>
+  );
 }

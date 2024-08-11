@@ -100,13 +100,21 @@ export default function Home() {
 
   return (
     <>
-      <div className="flex flex-col items-center justify-center w-screen h-screen gap-4 bg-[fff]">
-        <button
-          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
-          onClick={handleOpen}
-        >
-          Add New Item
-        </button>
+      <div className="flex flex-col items-center justify-start w-screen min-h-screen gap-4 bg-[fff] p-4">
+        <div className="flex flex-col sm:flex-row gap-2 w-full max-w-[800px]">
+          <button
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md w-full sm:w-auto"
+            onClick={handleOpen}
+          >
+            Add New Item
+          </button>
+          <button
+            className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md w-full sm:w-auto"
+            onClick={handleCameraOpen}
+          >
+            Open Camera
+          </button>
+        </div>
         {open && (
           <AddItem
             handleClose={handleClose}
@@ -120,12 +128,6 @@ export default function Home() {
           removeItem={removeItem}
           inventory={inventory}
         />
-        <button
-          className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md"
-          onClick={handleCameraOpen}
-        >
-          Open Camera
-        </button>
         <CameraModal
           open={cameraOpen}
           onClose={handleCameraClose}

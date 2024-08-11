@@ -22,20 +22,20 @@ export default function ShowItems({ inventory, addItem, removeItem }) {
     });
 
   return (
-    <div className="border border-gray-400 rounded-md w-[800px] h-[500px] overflow-auto">
-      <div className="bg-blue-200 p-4 flex justify-between items-center">
-        <h2>Inventory Items</h2>
+    <div className="border border-gray-400 rounded-md w-full max-w-[800px] h-[calc(100vh-200px)] overflow-auto">
+      <div className="bg-blue-200 p-4 flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
+        <h2 className="text-lg font-bold">Inventory Items</h2>
         <input
           type="text"
           placeholder="Search items..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="border border-gray-300 rounded-md px-3 py-2"
+          className="border border-gray-300 rounded-md px-3 py-2 w-full sm:w-auto"
         />
         <select
           value={sortOption}
           onChange={(e) => setSortOption(e.target.value)}
-          className="border border-gray-300 rounded-md px-3 py-2"
+          className="border border-gray-300 rounded-md px-3 py-2 w-full sm:w-auto"
         >
           <option value="name-asc">Name (A-Z)</option>
           <option value="name-desc">Name (Z-A)</option>
@@ -44,24 +44,33 @@ export default function ShowItems({ inventory, addItem, removeItem }) {
         </select>
       </div>
       <div className="p-4 space-y-4">
+        {/* Header row */}
+        <div className="grid grid-cols-3 gap-4 items-center font-bold text-gray-700 bg-gray-200 p-2 rounded-md">
+          <div className="pl-4">Name</div>
+          <div className="text-center">Quantity</div>
+          <div className="text-center">Configure</div>
+        </div>
+        {/* Inventory items */}
         {filteredInventory.map(({ name, quantity }) => (
           <div
-            className="bg-gray-100 p-4 flex justify-between items-center"
+            className="bg-gray-100 p-4 grid grid-cols-3 gap-4 items-center grid-flow-col"
             key={name}
           >
-            <h3 className="text-xl font-bold text-gray-700 capitalize">
+            <h3 className="text-lg font-bold text-gray-700 capitalize truncate pl-4">
               {name}
             </h3>
-            <p className="text-xl font-bold text-gray-700">{quantity}</p>
-            <div className="space-x-2">
+            <p className="text-lg font-bold text-gray-700 text-center">
+              {quantity}
+            </p>
+            <div className="flex space-x-2 justify-center">
               <button
-                className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md"
+                className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm"
                 onClick={() => addItem(name)}
               >
                 Add
               </button>
               <button
-                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md"
+                className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm"
                 onClick={() => removeItem(name)}
               >
                 Remove
