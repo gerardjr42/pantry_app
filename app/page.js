@@ -15,6 +15,7 @@ import { useCallback, useEffect, useState } from "react";
 import { analyzeImage } from "./api/vision";
 import AddItem from "./Components/AddItem";
 import CameraModal from "./Components/CameraModal";
+import RecipeSuggestion from "./Components/RecipeSuggestion";
 import ShowItems from "./Components/ShowItems";
 import "./globals.css";
 
@@ -24,6 +25,7 @@ export default function Home() {
   const [itemName, setItemName] = useState("");
   const [cameraOpen, setCameraOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [recipeOpen, setRecipeOpen] = useState(false);
 
   const handleCapture = useCallback(async (image) => {
     const base64Image = image.split(",")[1];
@@ -103,10 +105,16 @@ export default function Home() {
     }
   };
 
+  // Camera Modal
   const handleOpen = useCallback(() => setOpen(true), []);
   const handleClose = useCallback(() => setOpen(false), []);
   const handleCameraOpen = useCallback(() => setCameraOpen(true), []);
   const handleCameraClose = useCallback(() => setCameraOpen(false), []);
+
+  //Recipe Modal
+  const handleRecipeOpen = useCallback(() => setRecipeOpen(true), []);
+
+  const handleRecipeClose = useCallback(() => setRecipeOpen(false), []);
 
   return (
     <div className="bg-gradient-to-r from-indigo-900 to-purple-800 min-h-screen">
@@ -131,6 +139,12 @@ export default function Home() {
             onClick={handleCameraOpen}
           >
             Open Camera
+          </button>
+          <button
+            className="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded-lg w-full sm:w-auto transition duration-300 ease-in-out transform hover:scale-105 shadow-lg"
+            onClick={handleRecipeOpen}
+          >
+            Suggest Recipe
           </button>
         </motion.div>
         {open && (
@@ -158,6 +172,11 @@ export default function Home() {
           open={cameraOpen}
           onClose={handleCameraClose}
           onCapture={handleCapture}
+        />
+        <RecipeSuggestion
+          open={recipeOpen}
+          onClose={handleRecipeClose}
+          inventory={inventory}
         />
       </div>
     </div>
