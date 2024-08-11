@@ -2,12 +2,14 @@
 import { firestore } from "@/firebase";
 import {
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
   query,
   writeBatch,
 } from "firebase/firestore";
+import { motion } from "framer-motion";
 import { debounce } from "lodash";
 import { useCallback, useEffect, useState } from "react";
 import { analyzeImage } from "./api/vision";
@@ -21,7 +23,6 @@ export default function Home() {
   const [open, setOpen] = useState(false);
   const [itemName, setItemName] = useState("");
   const [cameraOpen, setCameraOpen] = useState(false);
-  const [pendingItem, setPendingItem] = useState("");
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const handleCapture = useCallback(async (image) => {
@@ -29,7 +30,6 @@ export default function Home() {
     const imageName = await analyzeImage(base64Image);
     if (imageName) {
       await addItem(imageName);
-      setPendingItem(imageName);
       setConfirmOpen(true);
     } else {
       console.log("Image not recognized");
@@ -93,28 +93,46 @@ export default function Home() {
     }
   };
 
+  const deleteItem = async (itemName) => {
+    try {
+      const docRef = doc(collection(firestore, "inventory"), itemName);
+      await deleteDoc(docRef);
+      await updateInventory();
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
+  };
+
   const handleOpen = useCallback(() => setOpen(true), []);
   const handleClose = useCallback(() => setOpen(false), []);
   const handleCameraOpen = useCallback(() => setCameraOpen(true), []);
   const handleCameraClose = useCallback(() => setCameraOpen(false), []);
 
   return (
-    <>
-      <div className="flex flex-col items-center justify-start w-screen min-h-screen gap-4 bg-[fff] p-4">
-        <div className="flex flex-col sm:flex-row gap-2 w-full max-w-[800px]">
+    <div className="bg-gradient-to-r from-indigo-900 to-purple-800 min-h-screen">
+      <h1 className="text-4xl font-bold text-center py-8 text-white">
+        Inventory Management
+      </h1>
+      <div className="flex flex-col items-center justify-start w-screen min-h-screen gap-6 p-4">
+        <motion.div
+          className="flex flex-col sm:flex-row gap-4 w-full max-w-[800px]"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           <button
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md w-full sm:w-auto"
+            className="bg-teal-500 hover:bg-teal-600 text-white px-6 py-3 rounded-lg w-full sm:w-auto transition duration-300 ease-in-out transform hover:scale-105 shadow-lg"
             onClick={handleOpen}
           >
             Add New Item
           </button>
           <button
-            className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md w-full sm:w-auto"
+            className="bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-lg w-full sm:w-auto transition duration-300 ease-in-out transform hover:scale-105 shadow-lg"
             onClick={handleCameraOpen}
           >
             Open Camera
           </button>
-        </div>
+        </motion.div>
         {open && (
           <AddItem
             handleClose={handleClose}
@@ -123,17 +141,25 @@ export default function Home() {
             addItem={addItem}
           />
         )}
-        <ShowItems
-          addItem={addItem}
-          removeItem={removeItem}
-          inventory={inventory}
-        />
+        <motion.div
+          className="w-full max-w-[800px]"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <ShowItems
+            inventory={inventory}
+            addItem={addItem}
+            removeItem={removeItem}
+            deleteItem={deleteItem}
+          />
+        </motion.div>
         <CameraModal
           open={cameraOpen}
           onClose={handleCameraClose}
           onCapture={handleCapture}
         />
       </div>
-    </>
+    </div>
   );
 }

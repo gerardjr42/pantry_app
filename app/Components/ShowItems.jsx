@@ -1,6 +1,13 @@
+import { motion } from "framer-motion";
+import { CircleMinus, CirclePlus, Trash2 } from "lucide-react";
 import { useState } from "react";
 
-export default function ShowItems({ inventory, addItem, removeItem }) {
+export default function ShowItems({
+  inventory,
+  addItem,
+  removeItem,
+  deleteItem,
+}) {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState("name-asc");
 
@@ -22,20 +29,19 @@ export default function ShowItems({ inventory, addItem, removeItem }) {
     });
 
   return (
-    <div className="border border-gray-400 rounded-md w-full max-w-[800px] h-[calc(100vh-200px)] overflow-auto">
-      <div className="bg-blue-200 p-4 flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
-        <h2 className="text-lg font-bold">Inventory Items</h2>
+    <div className="w-full max-w-5xl mx-auto shadow-xl rounded-lg bg-white flex flex-col">
+      <div className="bg-gradient-to-r from-teal-500 to-purple-500 p-4 flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0 sm:space-x-4">
         <input
           type="text"
           placeholder="Search items..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="border border-gray-300 rounded-md px-3 py-2 w-full sm:w-auto"
+          className="border border-gray-300 rounded-md px-3 py-2 w-full sm:w-64 bg-white"
         />
         <select
           value={sortOption}
           onChange={(e) => setSortOption(e.target.value)}
-          className="border border-gray-300 rounded-md px-3 py-2 w-full sm:w-auto"
+          className="border border-gray-300 rounded-md px-3 py-2 w-full sm:w-auto bg-white"
         >
           <option value="name-asc">Name (A-Z)</option>
           <option value="name-desc">Name (Z-A)</option>
@@ -43,41 +49,55 @@ export default function ShowItems({ inventory, addItem, removeItem }) {
           <option value="quantity-desc">Quantity (Descending)</option>
         </select>
       </div>
-      <div className="p-4 space-y-4">
-        {/* Header row */}
-        <div className="grid grid-cols-3 gap-4 items-center font-bold text-gray-700 bg-gray-200 p-2 rounded-md">
-          <div className="pl-4">Name</div>
-          <div className="text-center">Quantity</div>
-          <div className="text-center">Configure</div>
-        </div>
-        {/* Inventory items */}
-        {filteredInventory.map(({ name, quantity }) => (
-          <div
-            className="bg-gray-100 p-4 grid grid-cols-3 gap-4 items-center grid-flow-col"
-            key={name}
-          >
-            <h3 className="text-lg font-bold text-gray-700 capitalize truncate pl-4">
-              {name}
-            </h3>
-            <p className="text-lg font-bold text-gray-700 text-center">
-              {quantity}
-            </p>
-            <div className="flex space-x-2 justify-center">
-              <button
-                className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm"
-                onClick={() => addItem(name)}
+      <div className="max-h-[calc(80vh-200px)] overflow-y-auto">
+        <table className="w-full text-left">
+          <thead className="sticky top-0 bg-gradient-to-r from-teal-500 to-purple-500 text-white">
+            <tr>
+              <th className="px-6 py-3 w-1/2">Item</th>
+              <th className="px-6 py-3 w-1/4">Quantity</th>
+              <th className="px-6 py-3 w-1/4">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredInventory.map((item, index) => (
+              <motion.tr
+                key={item.name}
+                className="border-b border-gray-200 hover:bg-gray-50"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
               >
-                Add
-              </button>
-              <button
-                className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm"
-                onClick={() => removeItem(name)}
-              >
-                Remove
-              </button>
-            </div>
-          </div>
-        ))}
+                <td className="px-6 py-4 font-medium w-1/2">{item.name}</td>
+                <td className="px-6 py-4 w-1/4">{item.quantity}</td>
+                <td className="px-6 py-4 w-1/4">
+                  <div className="flex items-center justify-start space-x-2">
+                    <button
+                      className="w-8 h-8 flex items-center justify-center bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors duration-300"
+                      onClick={() => addItem(item.name)}
+                      aria-label="Add item"
+                    >
+                      <CirclePlus size={20} />
+                    </button>
+                    <button
+                      className="w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors duration-300"
+                      onClick={() => removeItem(item.name)}
+                      aria-label="Remove item"
+                    >
+                      <CircleMinus size={20} />
+                    </button>
+                    <button
+                      className="w-8 h-8 flex items-center justify-center bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors duration-300"
+                      onClick={() => deleteItem(item.name)}
+                      aria-label="Delete item"
+                    >
+                      <Trash2 size={20} />
+                    </button>
+                  </div>
+                </td>
+              </motion.tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
