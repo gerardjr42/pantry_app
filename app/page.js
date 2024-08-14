@@ -119,7 +119,7 @@ export default function Home() {
   return (
     <div className="bg-gradient-to-r from-indigo-900 to-purple-800 min-h-screen">
       <h1 className="text-4xl font-bold text-center py-8 text-white">
-        Inventory Management
+        Pantry Management
       </h1>
       <div className="flex flex-col items-center justify-start w-screen min-h-screen gap-6 p-4">
         <motion.div
